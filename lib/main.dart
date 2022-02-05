@@ -20,6 +20,14 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F8FA),
       ),
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF24292E),
+          secondary: const Color(0xFF2C974B),
+          onPrimary: const Color(0xFFFFFFFF),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF5F8FA),
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }

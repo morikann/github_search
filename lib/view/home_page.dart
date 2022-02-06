@@ -55,15 +55,24 @@ class HomePage extends HookConsumerWidget {
                 elevation: elevation.state,
                 flexibleSpace: FlexibleSpaceBar(
                   title: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
+                    width: MediaQuery.of(context).size.width * 0.8,
                     child: _buildTextField(context, ref, focusNode),
                   ),
                 ),
               ),
               repositories.when(
-                loading: () => const SliverToBoxAdapter(
+                loading: () => SliverFillRemaining(
                   child: Center(
-                    child: CircularProgressIndicator(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'images/github_icon.png',
+                          height: 100,
+                        ),
+                        const Text('loading...'),
+                      ],
+                    ),
                   ),
                 ),
                 error: (error, stack) {

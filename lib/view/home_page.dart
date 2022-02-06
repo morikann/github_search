@@ -42,6 +42,7 @@ class HomePage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         elevation: elevation.state,
         title: const Text(
           'ホーム',

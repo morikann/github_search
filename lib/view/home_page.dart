@@ -104,9 +104,20 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
-  TextField _buildTextField(FocusNode focusNode) {
+  Widget _buildTextField(
+      BuildContext context, WidgetRef ref, FocusNode focusNode) {
+    final text = ref.watch(_searchTextProvider.state);
+
+    Future<void> search(String query) async {
+      text.state = query;
+    }
+
+    final textController = useTextEditingController();
+
     return TextField(
+      controller: textController,
       focusNode: focusNode,
+      onSubmitted: search,
       cursorColor: Colors.blue,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
@@ -132,9 +143,14 @@ class HomePage extends HookConsumerWidget {
           Icons.search,
           color: Colors.grey,
         ),
-        suffixIcon: const Icon(
-          Icons.cancel,
-          color: Colors.grey,
+        suffixIcon: GestureDetector(
+          onTap: () {
+            textController.text = '';
+          },
+          child: const Icon(
+            Icons.cancel,
+            color: Colors.grey,
+          ),
         ),
         hintText: 'リポジトリを検索',
         isCollapsed: true,

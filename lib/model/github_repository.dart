@@ -3,6 +3,7 @@ import 'dart:convert';
 class GithubRepository {
   GithubRepository({
     this.name,
+    this.ownerName,
     this.ownerAvatarUrl,
     this.language,
     this.starCount,
@@ -13,7 +14,8 @@ class GithubRepository {
 
   factory GithubRepository.from(Map<String, dynamic> data) {
     return GithubRepository(
-      name: data['full_name'] as String,
+      name: data['name'] as String,
+      ownerName: (data['owner'] as Map<String, dynamic>)['login'] as String,
       ownerAvatarUrl:
           (data['owner'] as Map<String, dynamic>)['avatar_url'] as String,
       language: (data['language'] ?? '') as String,
@@ -25,6 +27,7 @@ class GithubRepository {
   }
 
   final String? name;
+  final String? ownerName;
   final String? ownerAvatarUrl;
   final String? language;
   final int? starCount;

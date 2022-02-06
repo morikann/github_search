@@ -11,7 +11,7 @@ final _repositoryProvider = FutureProvider<List<GithubRepository>>((ref) async {
   if (query == '') {
     return [];
   }
-  final repositories = await GithubClient.getData(query);
+  final repositories = await GithubClient().getData(query);
   return repositories ?? [];
 });
 

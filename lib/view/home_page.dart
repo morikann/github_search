@@ -42,6 +42,7 @@ class HomePage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         elevation: elevation.state,
         title: const Text(
           'ホーム',
@@ -64,6 +65,7 @@ class HomePage extends HookConsumerWidget {
                   ),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
                   title: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: _buildTextField(context, ref, focusNode),

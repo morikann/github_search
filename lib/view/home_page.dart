@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:github_search/model/github_repository.dart';
+import 'package:github_search/service/github_client.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
+final _searchTextProvider = StateProvider<String>((ref) => '');
+final _repositoryProvider = FutureProvider<List<GithubRepository>>((ref) async {
+  final query = ref.watch(_searchTextProvider);
+  if (query == '') {
+    return [];
+  }
+  final repositories = await GithubClient.getData(query);
+  return repositories ?? [];
+});
 
 class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +23,7 @@ class HomePage extends HookConsumerWidget {
     final focusNode = useFocusNode();
     final scrollController = useScrollController();
     final elevation = ref.watch(_elevationProvider.state);
+    final repositories = ref.watch(_repositoryProvider);
 
     void listener() {
       final scrolled = scrollController.position.pixels;
@@ -40,12 +52,50 @@ class HomePage extends HookConsumerWidget {
             controller: scrollController,
             slivers: [
               SliverAppBar(
+                elevation: elevation.state,
                 flexibleSpace: FlexibleSpaceBar(
                   title: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.7,
-                    child: _buildTextField(focusNode),
+                    child: _buildTextField(context, ref, focusNode),
                   ),
                 ),
+              ),
+              repositories.when(
+                loading: () => const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                error: (error, stack) {
+                  print(error);
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: Text('データを取得できませんでした。'),
+                    ),
+                  );
+                },
+                data: (repositories) {
+                  if (repositories.isEmpty) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text('該当のリポジトリはありませんでした。'),
+                      ),
+                    );
+                  } else {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return Card(
+                            child: ListTile(
+                              title: Text(repositories[index].name!),
+                            ),
+                          );
+                        },
+                        childCount: repositories.length,
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           ),

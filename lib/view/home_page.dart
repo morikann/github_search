@@ -94,7 +94,7 @@ class HomePage extends HookConsumerWidget {
                 },
                 data: (repositories) {
                   if (repositories.isEmpty) {
-                    return const SliverToBoxAdapter(
+                    return const SliverFillRemaining(
                       child: Center(
                         child: Text('該当のリポジトリはありませんでした。'),
                       ),

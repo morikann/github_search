@@ -2,12 +2,12 @@ import 'package:github_search/model/github_repository.dart';
 import 'package:http/http.dart' as http;
 
 class GithubClient {
-  GithubClient(this.baseUrl);
+  GithubClient({this.baseUrl = 'https://api.github.com/search/repositories'});
 
-  String baseUrl = 'https://api.github.com/search/repositories';
+  final String baseUrl;
 
-  static Future<List<GithubRepository>?> getData(String query) async {
-    final url = 'https://api.github.com/search/repositories?q=$query';
+  Future<List<GithubRepository>?> getData(String query, {int page = 1}) async {
+    final url = '$baseUrl?page=$page&q=$query';
     try {
       final res = await http.get(Uri.parse(url));
       if (res.statusCode != 200) {

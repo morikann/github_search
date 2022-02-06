@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:github_search/model/github_repository.dart';
 import 'package:github_search/service/github_client.dart';
+import 'package:github_search/view/repository_detail_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
@@ -104,8 +105,34 @@ class HomePage extends HookConsumerWidget {
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return Card(
-                            child: ListTile(
-                              title: Text(repositories[index].name!),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push<void>(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return RepositoryDetailPage(
+                                        name: repositories[index].name,
+                                        ownerName:
+                                            repositories[index].ownerName,
+                                        ownerAvatarUrl:
+                                            repositories[index].ownerAvatarUrl,
+                                        language: repositories[index].language,
+                                        starCount:
+                                            repositories[index].starCount,
+                                        watcherCount:
+                                            repositories[index].watcherCount,
+                                        folkCount:
+                                            repositories[index].folkCount,
+                                        issueCount:
+                                            repositories[index].issueCount,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: ListTile(
+                                title: Text(repositories[index].name!),
+                              ),
                             ),
                           );
                         },

@@ -57,7 +57,11 @@ class HomePage extends HookConsumerWidget {
             controller: scrollController,
             slivers: [
               SliverAppBar(
-                elevation: elevation.state,
+                shape: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.shade300,
+                  ),
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   title: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,

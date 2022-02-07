@@ -210,33 +210,15 @@ class HomePage extends HookConsumerWidget {
   SliverFillRemaining _buildLoadingView(TextTheme textTheme) {
     return SliverFillRemaining(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'images/github_icon.png',
-              height: 100,
-            ),
-            Text('loading...', style: textTheme.bodyText2),
-          ],
-        ),
+        child: CircularProgressIndicator(color: AppColor.progress),
       ),
     );
   }
 
   SliverFillRemaining _buildInitView() {
-    return SliverFillRemaining(
+    return const SliverFillRemaining(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'images/github_icon.png',
-              height: 100,
-            ),
-            const Text('リポジトリを検索してみよう'),
-          ],
-        ),
+        child: Text('リポジトリを検索してみよう！'),
       ),
     );
   }

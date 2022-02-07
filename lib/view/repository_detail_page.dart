@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_search/component/app_color.dart';
 
 class RepositoryDetailPage extends StatelessWidget {
   const RepositoryDetailPage(
@@ -24,6 +25,8 @@ class RepositoryDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -53,19 +56,22 @@ class RepositoryDetailPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     Text(
                       name ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28,
-                      ),
+                      style: textTheme.subtitle1,
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
                         const Icon(Icons.star_outline),
-                        Text('$starCount Star'),
+                        Text(
+                          '$starCount Star',
+                          style: textTheme.bodyText2,
+                        ),
                         const SizedBox(width: 20),
                         const Icon(Icons.call_split),
-                        Text('$folkCount Folk'),
+                        Text(
+                          '$folkCount Folk',
+                          style: textTheme.bodyText2,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -126,6 +132,8 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Row(
@@ -148,13 +156,17 @@ class ListItem extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 title,
-                style: const TextStyle(fontSize: 18),
+                style: textTheme.bodyText1?.copyWith(
+                  color: AppColor.text,
+                ),
               ),
             ],
           ),
           Text(
             trailing,
-            style: const TextStyle(fontSize: 18),
+            style: textTheme.bodyText1?.copyWith(
+              color: AppColor.text,
+            ),
           ),
         ],
       ),

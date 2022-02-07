@@ -7,6 +7,7 @@ import 'package:github_search/model/github_repository.dart';
 import 'package:github_search/view/repository_detail_page.dart';
 import 'package:github_search/view_model/repository_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
 final _isInitViewProvider = StateProvider<bool>((ref) => true);
@@ -193,8 +194,9 @@ class HomePage extends HookConsumerWidget {
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage:
-                    NetworkImage(repositories[index].ownerAvatarUrl!),
+                backgroundImage: CachedNetworkImageProvider(
+                  repositories[index].ownerAvatarUrl!,
+                ),
                 radius: 16,
                 backgroundColor: Colors.transparent,
               ),

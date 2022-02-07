@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:github_search/component/app_color.dart';
 
@@ -35,7 +36,7 @@ class RepositoryDetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(ownerAvatarUrl!),
+              backgroundImage: CachedNetworkImageProvider(ownerAvatarUrl!),
               radius: 16,
               backgroundColor: Colors.transparent,
             ),

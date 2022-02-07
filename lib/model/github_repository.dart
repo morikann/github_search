@@ -34,14 +34,4 @@ class GithubRepository {
   final int? watcherCount;
   final int? folkCount;
   final int? issueCount;
-
-  static Future<List<GithubRepository>> getRepositories(String json) async {
-    final repositories = <GithubRepository>[];
-    final data = jsonDecode(json) as Map<String, dynamic>;
-    final items = (data['items'] as List<dynamic>).cast<Map<String, dynamic>>();
-    for (final data in items) {
-      repositories.add(GithubRepository.fromJson(data));
-    }
-    return repositories;
-  }
 }

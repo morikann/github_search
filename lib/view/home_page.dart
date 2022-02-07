@@ -5,6 +5,7 @@ import 'package:github_search/model/github_repository.dart';
 import 'package:github_search/service/github_client.dart';
 import 'package:github_search/view/repository_detail_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
 final _searchTextProvider = StateProvider<String>((ref) => '');
@@ -14,7 +15,8 @@ final _repositoryProvider = FutureProvider<List<GithubRepository>>((ref) async {
   if (query == '') {
     return [];
   }
-  final repositories = await GithubClient().getData(query);
+  final repositories =
+      await GithubClient().fetchRepositories(http.Client(), query: query);
   return repositories ?? [];
 });
 

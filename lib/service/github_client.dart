@@ -14,11 +14,11 @@ class GithubClient {
     int page = 1,
   }) async {
     final url = '$baseUrl?page=$page&q=$query';
+
     final response = await client.get(Uri.parse(url));
     if (response.statusCode != 200) {
       throw Exception('データを取得できませんでした。');
     }
-
     return compute(parseRepositories, response.body);
   }
 

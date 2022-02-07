@@ -211,7 +211,9 @@ class HomePage extends HookConsumerWidget {
           ),
         ),
         hintText: 'リポジトリを検索',
-        hintStyle: textTheme.bodyText2,
+        hintStyle: textTheme.bodyText2?.copyWith(
+          color: Colors.grey,
+        ),
         isCollapsed: true,
       ),
     );

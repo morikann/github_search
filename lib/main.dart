@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_search/component/app_color.dart';
 import 'package:github_search/view/home_page.dart';
 
 void main() {
@@ -19,19 +20,58 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xFFFFFFFF),
-          secondary: const Color(0xFF2C974B),
-          onPrimary: const Color(0xFF24292E),
+          primary: AppColor.main,
+          secondary: AppColor.accent,
+          onPrimary: AppColor.text,
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F8FA),
+        textTheme: TextTheme(
+          headline6: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          subtitle1: TextStyle(
+            color: AppColor.text,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+          bodyText1: TextStyle(
+            color: AppColor.text,
+            fontSize: 16,
+          ),
+          bodyText2: TextStyle(
+            color: AppColor.text,
+            // textBaseline: TextBaseline.values,
+          ),
+        ),
       ),
       darkTheme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xFF24292E),
-          secondary: const Color(0xFF2C974B),
-          onPrimary: const Color(0xFFFFFFFF),
+        iconTheme: IconThemeData(
+          color: AppColor.text,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF5F8FA),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: AppColor.text,
+          secondary: AppColor.accent,
+          onPrimary: AppColor.main,
+        ),
+        textTheme: TextTheme(
+          headline6: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          subtitle1: TextStyle(
+            color: AppColor.text,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+          bodyText1: TextStyle(
+            color: AppColor.main,
+            fontSize: 16,
+          ),
+          bodyText2: TextStyle(
+            color: AppColor.text,
+            // textBaseline: TextBaseline.values,
+          ),
+        ),
+        scaffoldBackgroundColor: AppColor.back,
       ),
       home: const HomePage(),
     );

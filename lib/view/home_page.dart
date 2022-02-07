@@ -76,11 +76,16 @@ class HomePage extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: elevation.state,
-        title: Hero(
-          tag: 'logo',
-          child: Image.asset(
-            'images/github_icon.png',
-            height: 50,
+        title: GestureDetector(
+          onTap: () {
+            scrollToTop(scrollController);
+          },
+          child: Hero(
+            tag: 'logo',
+            child: Image.asset(
+              'images/github_icon.png',
+              height: 50,
+            ),
           ),
         ),
       ),
@@ -116,6 +121,14 @@ class HomePage extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void scrollToTop(ScrollController scrollController) {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.linear,
     );
   }
 

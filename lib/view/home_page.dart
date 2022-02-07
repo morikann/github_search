@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
 final _searchTextProvider = StateProvider<String>((ref) => '');
+final _isSearchedProvider = StateProvider<bool>((ref) => false);
 final _repositoryProvider = FutureProvider<List<GithubRepository>>((ref) async {
   final query = ref.watch(_searchTextProvider);
   if (query == '') {
@@ -27,6 +28,7 @@ class HomePage extends HookConsumerWidget {
     final scrollController = useScrollController();
     final elevation = ref.watch(_elevationProvider.state);
     final repositories = ref.watch(_repositoryProvider);
+    final isSearched = ref.watch(_isSearchedProvider.state);
 
     void listener() {
       final scrolled = scrollController.position.pixels;
@@ -72,8 +74,91 @@ class HomePage extends HookConsumerWidget {
                   ),
                 ),
               ),
-              repositories.when(
-                loading: () => SliverFillRemaining(
+              if (isSearched.state) ...[
+                repositories.when(
+                  loading: () => SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'images/github_icon.png',
+                            height: 100,
+                          ),
+                          Text('loading...', style: textTheme.bodyText2),
+                        ],
+                      ),
+                    ),
+                  ),
+                  error: (error, stack) {
+                    print(error);
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'データを取得できませんでした。',
+                          style: textTheme.bodyText2,
+                        ),
+                      ),
+                    );
+                  },
+                  data: (repositories) {
+                    if (repositories.isEmpty) {
+                      return SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            '該当のリポジトリは見つかりませんでした。',
+                            style: textTheme.bodyText2,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return Card(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push<void>(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return RepositoryDetailPage(
+                                          name: repositories[index].name,
+                                          ownerName:
+                                              repositories[index].ownerName,
+                                          ownerAvatarUrl: repositories[index]
+                                              .ownerAvatarUrl,
+                                          language:
+                                              repositories[index].language,
+                                          starCount:
+                                              repositories[index].starCount,
+                                          watcherCount:
+                                              repositories[index].watcherCount,
+                                          folkCount:
+                                              repositories[index].folkCount,
+                                          issueCount:
+                                              repositories[index].issueCount,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: ListTile(
+                                  title: Text(
+                                    repositories[index].name!,
+                                    style: textTheme.bodyText1,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: repositories.length,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ] else ...[
+                SliverFillRemaining(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -82,77 +167,12 @@ class HomePage extends HookConsumerWidget {
                           'images/github_icon.png',
                           height: 100,
                         ),
-                        Text('loading...', style: textTheme.bodyText2),
+                        const Text('リポジトリを検索してみよう'),
                       ],
                     ),
                   ),
                 ),
-                error: (error, stack) {
-                  print(error);
-                  return SliverToBoxAdapter(
-                    child: Center(
-                      child: Text(
-                        'データを取得できませんでした。',
-                        style: textTheme.bodyText2,
-                      ),
-                    ),
-                  );
-                },
-                data: (repositories) {
-                  if (repositories.isEmpty) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: Text(
-                          '該当のリポジトリはありませんでした。',
-                          style: textTheme.bodyText2,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return Card(
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push<void>(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return RepositoryDetailPage(
-                                        name: repositories[index].name,
-                                        ownerName:
-                                            repositories[index].ownerName,
-                                        ownerAvatarUrl:
-                                            repositories[index].ownerAvatarUrl,
-                                        language: repositories[index].language,
-                                        starCount:
-                                            repositories[index].starCount,
-                                        watcherCount:
-                                            repositories[index].watcherCount,
-                                        folkCount:
-                                            repositories[index].folkCount,
-                                        issueCount:
-                                            repositories[index].issueCount,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: ListTile(
-                                title: Text(
-                                  repositories[index].name!,
-                                  style: textTheme.bodyText1,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        childCount: repositories.length,
-                      ),
-                    );
-                  }
-                },
-              ),
+              ],
             ],
           ),
         ),
@@ -164,8 +184,10 @@ class HomePage extends HookConsumerWidget {
       BuildContext context, WidgetRef ref, FocusNode focusNode) {
     final textTheme = Theme.of(context).textTheme;
     final text = ref.watch(_searchTextProvider.state);
+    final isSearched = ref.watch(_isSearchedProvider.state);
 
     Future<void> search(String query) async {
+      isSearched.state = true;
       text.state = query;
     }
 

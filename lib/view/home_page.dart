@@ -75,9 +75,12 @@ class HomePage extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: elevation.state,
-        title: Text(
-          'ホーム',
-          style: textTheme.headline6,
+        title: Hero(
+          tag: 'logo',
+          child: Image.asset(
+            'images/github_icon.png',
+            height: 50,
+          ),
         ),
       ),
       body: SafeArea(
@@ -171,9 +174,22 @@ class HomePage extends HookConsumerWidget {
           );
         },
         child: ListTile(
-          title: Text(
-            repositories[index].name!,
-            style: textTheme.bodyText1,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage:
+                    NetworkImage(repositories[index].ownerAvatarUrl!),
+                radius: 16,
+                backgroundColor: Colors.transparent,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  repositories[index].name!,
+                  style: textTheme.bodyText1,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -194,33 +210,15 @@ class HomePage extends HookConsumerWidget {
   SliverFillRemaining _buildLoadingView(TextTheme textTheme) {
     return SliverFillRemaining(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'images/github_icon.png',
-              height: 100,
-            ),
-            Text('loading...', style: textTheme.bodyText2),
-          ],
-        ),
+        child: CircularProgressIndicator(color: AppColor.progress),
       ),
     );
   }
 
   SliverFillRemaining _buildInitView() {
-    return SliverFillRemaining(
+    return const SliverFillRemaining(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'images/github_icon.png',
-              height: 100,
-            ),
-            const Text('リポジトリを検索してみよう'),
-          ],
-        ),
+        child: Text('リポジトリを検索してみよう！'),
       ),
     );
   }

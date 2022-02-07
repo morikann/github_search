@@ -6,4 +6,5 @@ class AppColor {
   static Color main = const Color(0xFFFFFFFF);
   static Color back = const Color(0xFFF5F8FA);
   static Color cursor = Colors.blue;
+  static Color progress = Colors.blue;
 }

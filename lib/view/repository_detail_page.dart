@@ -116,6 +116,16 @@ class RepositoryDetailPage extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 30),
+              Hero(
+                tag: 'logo',
+                child: Center(
+                  child: Image.asset(
+                    'images/github_icon.png',
+                    height: 200,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

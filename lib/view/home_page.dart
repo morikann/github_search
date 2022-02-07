@@ -76,30 +76,12 @@ class HomePage extends HookConsumerWidget {
                   ),
                 ),
               ),
-              if (isSearched.state) ...[
-                repositories.when(
-                  loading: () => _buildLoadingView(textTheme),
-                  error: (error, _) {
-                    return _buildErrorView(textTheme);
-                  },
-                  data: (repositories) {
-                    if (repositories.isEmpty) {
-                      return SliverFillRemaining(
-                        child: Center(
-                          child: Text(
-                            '該当のリポジトリは見つかりませんでした。',
-                            style: textTheme.bodyText2,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return _buildRepositories(repositories, textTheme);
-                    }
-                  },
-                ),
-              ] else ...[
-                _buildInitView(),
-              ],
+              _body(
+                isInit: isInitView.state,
+                loading: loading.state,
+                textTheme: textTheme,
+                repositories: repositories,
+              ),
             ],
           ),
         ),
@@ -107,50 +89,77 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
+  Widget _body({
+    required bool isInit,
+    required bool loading,
+    required TextTheme textTheme,
+    required List<GithubRepository> repositories,
+  }) {
+    // 初期画面
+    if (isInit) {
+      return _buildInitView();
+    }
+
+    if (loading) {
+      return _buildLoadingView(textTheme);
+    }
+
+    if (repositories.isEmpty) {
+      return _buildRepositoryEmptyView(textTheme);
+    }
+
+    return _buildRepositories(repositories, textTheme);
+  }
+
   SliverList _buildRepositories(
       List<GithubRepository> repositories, TextTheme textTheme) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return Card(
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).push<void>(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RepositoryDetailPage(
-                        name: repositories[index].name,
-                        ownerName: repositories[index].ownerName,
-                        ownerAvatarUrl: repositories[index].ownerAvatarUrl,
-                        language: repositories[index].language,
-                        starCount: repositories[index].starCount,
-                        watcherCount: repositories[index].watcherCount,
-                        folkCount: repositories[index].folkCount,
-                        issueCount: repositories[index].issueCount,
-                      );
-                    },
-                  ),
-                );
-              },
-              child: ListTile(
-                title: Text(
-                  repositories[index].name!,
-                  style: textTheme.bodyText1,
-                ),
-              ),
-            ),
-          );
+          return _sliverItem(context, repositories, index, textTheme);
         },
         childCount: repositories.length,
       ),
     );
   }
 
-  SliverFillRemaining _buildErrorView(TextTheme textTheme) {
+  Card _sliverItem(BuildContext context, List<GithubRepository> repositories,
+      int index, TextTheme textTheme) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push<void>(
+            MaterialPageRoute(
+              builder: (context) {
+                return RepositoryDetailPage(
+                  name: repositories[index].name,
+                  ownerName: repositories[index].ownerName,
+                  ownerAvatarUrl: repositories[index].ownerAvatarUrl,
+                  language: repositories[index].language,
+                  starCount: repositories[index].starCount,
+                  watcherCount: repositories[index].watcherCount,
+                  folkCount: repositories[index].folkCount,
+                  issueCount: repositories[index].issueCount,
+                );
+              },
+            ),
+          );
+        },
+        child: ListTile(
+          title: Text(
+            repositories[index].name!,
+            style: textTheme.bodyText1,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverFillRemaining _buildRepositoryEmptyView(TextTheme textTheme) {
     return SliverFillRemaining(
       child: Center(
         child: Text(
-          'データを取得できませんでした。',
+          '該当のリポジトリは見つかりませんでした。',
           style: textTheme.bodyText2,
         ),
       ),

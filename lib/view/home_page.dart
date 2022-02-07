@@ -91,48 +91,7 @@ class HomePage extends HookConsumerWidget {
                         ),
                       );
                     } else {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return Card(
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push<void>(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return RepositoryDetailPage(
-                                          name: repositories[index].name,
-                                          ownerName:
-                                              repositories[index].ownerName,
-                                          ownerAvatarUrl: repositories[index]
-                                              .ownerAvatarUrl,
-                                          language:
-                                              repositories[index].language,
-                                          starCount:
-                                              repositories[index].starCount,
-                                          watcherCount:
-                                              repositories[index].watcherCount,
-                                          folkCount:
-                                              repositories[index].folkCount,
-                                          issueCount:
-                                              repositories[index].issueCount,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: ListTile(
-                                  title: Text(
-                                    repositories[index].name!,
-                                    style: textTheme.bodyText1,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          childCount: repositories.length,
-                        ),
-                      );
+                      return _buildRepositories(repositories, textTheme);
                     }
                   },
                 ),
@@ -142,6 +101,45 @@ class HomePage extends HookConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SliverList _buildRepositories(
+      List<GithubRepository> repositories, TextTheme textTheme) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return Card(
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RepositoryDetailPage(
+                        name: repositories[index].name,
+                        ownerName: repositories[index].ownerName,
+                        ownerAvatarUrl: repositories[index].ownerAvatarUrl,
+                        language: repositories[index].language,
+                        starCount: repositories[index].starCount,
+                        watcherCount: repositories[index].watcherCount,
+                        folkCount: repositories[index].folkCount,
+                        issueCount: repositories[index].issueCount,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(
+                  repositories[index].name!,
+                  style: textTheme.bodyText1,
+                ),
+              ),
+            ),
+          );
+        },
+        childCount: repositories.length,
       ),
     );
   }

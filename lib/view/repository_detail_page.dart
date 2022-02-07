@@ -37,6 +37,7 @@ class RepositoryDetailPage extends StatelessWidget {
             CircleAvatar(
               backgroundImage: NetworkImage(ownerAvatarUrl!),
               radius: 16,
+              backgroundColor: Colors.transparent,
             ),
             const SizedBox(width: 6),
             Text(ownerName ?? 'リポジトリ'),

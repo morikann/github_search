@@ -12,17 +12,17 @@ class GithubRepository {
     this.issueCount,
   });
 
-  factory GithubRepository.from(Map<String, dynamic> data) {
+  factory GithubRepository.fromJson(Map<String, dynamic> json) {
     return GithubRepository(
-      name: data['name'] as String,
-      ownerName: (data['owner'] as Map<String, dynamic>)['login'] as String,
+      name: json['name'] as String,
+      ownerName: (json['owner'] as Map<String, dynamic>)['login'] as String,
       ownerAvatarUrl:
-          (data['owner'] as Map<String, dynamic>)['avatar_url'] as String,
-      language: (data['language'] ?? '') as String,
-      starCount: data['stargazers_count'] as int,
-      watcherCount: data['watchers_count'] as int,
-      folkCount: data['forks_count'] as int,
-      issueCount: data['open_issues_count'] as int,
+          (json['owner'] as Map<String, dynamic>)['avatar_url'] as String,
+      language: (json['language'] ?? '') as String,
+      starCount: json['stargazers_count'] as int,
+      watcherCount: json['watchers_count'] as int,
+      folkCount: json['forks_count'] as int,
+      issueCount: json['open_issues_count'] as int,
     );
   }
 
@@ -40,7 +40,7 @@ class GithubRepository {
     final data = jsonDecode(json) as Map<String, dynamic>;
     final items = (data['items'] as List<dynamic>).cast<Map<String, dynamic>>();
     for (final data in items) {
-      repositories.add(GithubRepository.from(data));
+      repositories.add(GithubRepository.fromJson(data));
     }
     return repositories;
   }

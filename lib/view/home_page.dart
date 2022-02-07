@@ -174,9 +174,22 @@ class HomePage extends HookConsumerWidget {
           );
         },
         child: ListTile(
-          title: Text(
-            repositories[index].name!,
-            style: textTheme.bodyText1,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage:
+                    NetworkImage(repositories[index].ownerAvatarUrl!),
+                radius: 16,
+                backgroundColor: Colors.transparent,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  repositories[index].name!,
+                  style: textTheme.bodyText1,
+                ),
+              ),
+            ],
           ),
         ),
       ),

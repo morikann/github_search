@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_search/component/app_color.dart';
 import 'package:github_search/model/github_repository.dart';
-import 'package:github_search/service/github_client.dart';
 import 'package:github_search/view/repository_detail_page.dart';
+import 'package:github_search/view_model/repository_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:http/http.dart' as http;
 
 final _elevationProvider = StateProvider<double>((ref) => 0);
+final _isInitViewProvider = StateProvider<bool>((ref) => true);
+final _loadingProvider = StateProvider<bool>((ref) => false);
+final _fetchMoreProvider = StateProvider<bool>((ref) => true);
 final _searchTextProvider = StateProvider<String>((ref) => '');
-final _isSearchedProvider = StateProvider<bool>((ref) => false);
-final _repositoryProvider = FutureProvider<List<GithubRepository>>((ref) async {
-  final query = ref.watch(_searchTextProvider);
-  if (query == '') {
-    return [];
-  }
-  final repositories =
-      await GithubClient().fetchRepositories(http.Client(), query: query);
-  return repositories ?? [];
-});
+final _pageProvider = StateProvider<int>((ref) => 1);
 
 class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,21 +23,52 @@ class HomePage extends HookConsumerWidget {
     final focusNode = useFocusNode();
     final scrollController = useScrollController();
     final elevation = ref.watch(_elevationProvider.state);
-    final repositories = ref.watch(_repositoryProvider);
-    final isSearched = ref.watch(_isSearchedProvider.state);
+    final isInitView = ref.watch(_isInitViewProvider.state);
+    final loading = ref.watch(_loadingProvider.state);
+    final repositoryNotifier = ref.watch(repositoryNotifierProvider.notifier);
+    final repositories = ref.watch(repositoryNotifierProvider);
+    final fetchMore = ref.watch(_fetchMoreProvider.state);
+    final query = ref.watch(_searchTextProvider.state);
+    final page = ref.watch(_pageProvider.state);
 
-    void listener() {
-      final scrolled = scrollController.position.pixels;
-      if (scrolled >= 56) {
+    Future<void> listener() async {
+      final position = scrollController.position.pixels;
+      // スクロールしたらappBarに影をつける
+      if (position >= 56) {
         elevation.state = 3;
       } else {
         elevation.state = 0;
+      }
+
+      final scrolled = scrollController.position.pixels /
+          scrollController.position.maxScrollExtent;
+      // 画面の8割りスクロールしたら、追加でデータを読み込む
+      if (scrolled > 0.8 && fetchMore.state) {
+        page.state++;
+        fetchMore.state = false;
+        try {
+          await repositoryNotifier
+              .more(query.state, page: page.state)
+              .then((canMore) {
+            fetchMore.state = canMore;
+          });
+        } on Exception {
+          // 読み込みエラー時にToastを表示
+          await Fluttertoast.showToast(
+            msg: '読み込みの上限に達しました。\n1分後に再度検索してください。',
+            timeInSecForIosWeb: 3,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.black38,
+          );
+        }
       }
     }
 
     useEffect(() {
       scrollController.addListener(listener);
-      return null;
+      return () {
+        scrollController.removeListener(listener);
+      };
     }, []);
 
     return Scaffold(
@@ -203,12 +228,28 @@ class HomePage extends HookConsumerWidget {
   Widget _buildTextField(
       BuildContext context, WidgetRef ref, FocusNode focusNode) {
     final textTheme = Theme.of(context).textTheme;
-    final text = ref.watch(_searchTextProvider.state);
-    final isSearched = ref.watch(_isSearchedProvider.state);
+    final isInitView = ref.watch(_isInitViewProvider.state);
+    final loading = ref.watch(_loadingProvider.state);
+    final repositoryNotifier = ref.watch(repositoryNotifierProvider.notifier);
+    final page = ref.watch(_pageProvider.state);
+    final query = ref.watch(_searchTextProvider.state);
 
-    Future<void> search(String query) async {
-      isSearched.state = true;
-      text.state = query;
+    Future<void> search(String text) async {
+      query.state = text;
+      loading.state = true;
+      page.state = 1;
+      isInitView.state = false;
+      try {
+        await repositoryNotifier.init(query.state);
+      } on Exception {
+        await Fluttertoast.showToast(
+          msg: 'データを取得できませんでした。',
+          timeInSecForIosWeb: 3,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black38,
+        );
+      }
+      loading.state = false;
     }
 
     final textController = useTextEditingController();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:github_search/component/app_color.dart';
 import 'package:github_search/model/github_repository.dart';
 import 'package:github_search/service/github_client.dart';
 import 'package:github_search/view/repository_detail_page.dart';
@@ -21,6 +22,7 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
     final focusNode = useFocusNode();
     final scrollController = useScrollController();
     final elevation = ref.watch(_elevationProvider.state);
@@ -44,11 +46,9 @@ class HomePage extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: elevation.state,
-        title: const Text(
+        title: Text(
           'ホーム',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: textTheme.headline6,
         ),
       ),
       body: SafeArea(
@@ -82,24 +82,30 @@ class HomePage extends HookConsumerWidget {
                           'images/github_icon.png',
                           height: 100,
                         ),
-                        const Text('loading...'),
+                        Text('loading...', style: textTheme.bodyText2),
                       ],
                     ),
                   ),
                 ),
                 error: (error, stack) {
                   print(error);
-                  return const SliverToBoxAdapter(
+                  return SliverToBoxAdapter(
                     child: Center(
-                      child: Text('データを取得できませんでした。'),
+                      child: Text(
+                        'データを取得できませんでした。',
+                        style: textTheme.bodyText2,
+                      ),
                     ),
                   );
                 },
                 data: (repositories) {
                   if (repositories.isEmpty) {
-                    return const SliverFillRemaining(
+                    return SliverFillRemaining(
                       child: Center(
-                        child: Text('該当のリポジトリはありませんでした。'),
+                        child: Text(
+                          '該当のリポジトリはありませんでした。',
+                          style: textTheme.bodyText2,
+                        ),
                       ),
                     );
                   } else {
@@ -133,7 +139,10 @@ class HomePage extends HookConsumerWidget {
                                 );
                               },
                               child: ListTile(
-                                title: Text(repositories[index].name!),
+                                title: Text(
+                                  repositories[index].name!,
+                                  style: textTheme.bodyText1,
+                                ),
                               ),
                             ),
                           );
@@ -153,6 +162,7 @@ class HomePage extends HookConsumerWidget {
 
   Widget _buildTextField(
       BuildContext context, WidgetRef ref, FocusNode focusNode) {
+    final textTheme = Theme.of(context).textTheme;
     final text = ref.watch(_searchTextProvider.state);
 
     Future<void> search(String query) async {
@@ -162,10 +172,11 @@ class HomePage extends HookConsumerWidget {
     final textController = useTextEditingController();
 
     return TextField(
+      style: textTheme.bodyText2,
       controller: textController,
       focusNode: focusNode,
       onSubmitted: search,
-      cursorColor: Colors.blue,
+      cursorColor: AppColor.cursor,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
@@ -200,6 +211,7 @@ class HomePage extends HookConsumerWidget {
           ),
         ),
         hintText: 'リポジトリを検索',
+        hintStyle: textTheme.bodyText2,
         isCollapsed: true,
       ),
     );

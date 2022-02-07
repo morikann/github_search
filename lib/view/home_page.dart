@@ -77,16 +77,8 @@ class HomePage extends HookConsumerWidget {
               if (isSearched.state) ...[
                 repositories.when(
                   loading: () => _buildLoadingView(textTheme),
-                  error: (error, stack) {
-                    print(error);
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Text(
-                          'データを取得できませんでした。',
-                          style: textTheme.bodyText2,
-                        ),
-                      ),
-                    );
+                  error: (error, _) {
+                    return _buildErrorView(textTheme);
                   },
                   data: (repositories) {
                     if (repositories.isEmpty) {
@@ -149,6 +141,17 @@ class HomePage extends HookConsumerWidget {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  SliverFillRemaining _buildErrorView(TextTheme textTheme) {
+    return SliverFillRemaining(
+      child: Center(
+        child: Text(
+          'データを取得できませんでした。',
+          style: textTheme.bodyText2,
         ),
       ),
     );

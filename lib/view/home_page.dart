@@ -158,23 +158,27 @@ class HomePage extends HookConsumerWidget {
                   },
                 ),
               ] else ...[
-                SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'images/github_icon.png',
-                          height: 100,
-                        ),
-                        const Text('リポジトリを検索してみよう'),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildInitView(),
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  SliverFillRemaining _buildInitView() {
+    return SliverFillRemaining(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'images/github_icon.png',
+              height: 100,
+            ),
+            const Text('リポジトリを検索してみよう'),
+          ],
         ),
       ),
     );

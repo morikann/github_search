@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_search/component/app_color.dart';
@@ -55,7 +56,7 @@ class HomePage extends HookConsumerWidget {
         } on Exception {
           // 読み込みエラー時にToastを表示
           await Fluttertoast.showToast(
-            msg: '読み込みの上限に達しました。\n1分後に再度検索してください。',
+            msg: AppLocalizations.of(context)!.reach_limit_message,
             timeInSecForIosWeb: 3,
             gravity: ToastGravity.CENTER,
             backgroundColor: Colors.black38,
@@ -105,6 +106,7 @@ class HomePage extends HookConsumerWidget {
                 ),
               ),
               _body(
+                context: context,
                 isInit: isInitView.state,
                 loading: loading.state,
                 textTheme: textTheme,
@@ -118,6 +120,7 @@ class HomePage extends HookConsumerWidget {
   }
 
   Widget _body({
+    required BuildContext context,
     required bool isInit,
     required bool loading,
     required TextTheme textTheme,
@@ -125,7 +128,7 @@ class HomePage extends HookConsumerWidget {
   }) {
     // 初期画面
     if (isInit) {
-      return _buildInitView();
+      return _buildInitView(context);
     }
 
     if (loading) {
@@ -133,7 +136,7 @@ class HomePage extends HookConsumerWidget {
     }
 
     if (repositories.isEmpty) {
-      return _buildRepositoryEmptyView(textTheme);
+      return _buildRepositoryEmptyView(context, textTheme);
     }
 
     return _buildRepositories(repositories, textTheme);
@@ -196,11 +199,12 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
-  SliverFillRemaining _buildRepositoryEmptyView(TextTheme textTheme) {
+  SliverFillRemaining _buildRepositoryEmptyView(
+      BuildContext context, TextTheme textTheme) {
     return SliverFillRemaining(
       child: Center(
         child: Text(
-          '該当のリポジトリは見つかりませんでした。',
+          AppLocalizations.of(context)!.empty_message,
           style: textTheme.bodyText2,
         ),
       ),
@@ -215,10 +219,10 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
-  SliverFillRemaining _buildInitView() {
-    return const SliverFillRemaining(
+  SliverFillRemaining _buildInitView(BuildContext context) {
+    return SliverFillRemaining(
       child: Center(
-        child: Text('リポジトリを検索してみよう！'),
+        child: Text(AppLocalizations.of(context)!.try_search_message),
       ),
     );
   }
@@ -241,7 +245,7 @@ class HomePage extends HookConsumerWidget {
         await repositoryNotifier.init(query.state);
       } on Exception {
         await Fluttertoast.showToast(
-          msg: 'データを取得できませんでした。',
+          msg: AppLocalizations.of(context)!.cannot_fetch_data_message,
           timeInSecForIosWeb: 3,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.black38,
@@ -291,7 +295,7 @@ class HomePage extends HookConsumerWidget {
             color: Colors.grey,
           ),
         ),
-        hintText: 'リポジトリを検索',
+        hintText: AppLocalizations.of(context)?.hint_text,
         hintStyle: textTheme.bodyText2?.copyWith(
           color: Colors.grey,
         ),

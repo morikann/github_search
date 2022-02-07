@@ -1,0 +1,11 @@
+{
+    "@@locale":"en",
+    "hint_text": "search repository",
+    "@hint_text": {
+        "description": "hint text"
+    },
+    "empty_message": "repository was not found",
+    "try_search_message": "Let's search repository!",
+    "cannot_fetch_data_message": "Could not get the data",
+    "reach_limit_message": "The read limit has been reached\nPlease search again after 1 minute"
+}

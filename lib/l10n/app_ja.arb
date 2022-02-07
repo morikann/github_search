@@ -1,0 +1,8 @@
+{
+    "@@locale": "ja",
+    "hint_text": "リポジトリを検索",
+    "empty_message": "該当のリポジトリは見つかりませんでした。",
+    "try_search_message": "リポジトリを検索してみよう！",
+    "cannot_fetch_data_message": "データを取得できませんでした。",
+    "reach_limit_message": "読み込みの上限に達しました。\n1分後に再度検索してください。"
+}

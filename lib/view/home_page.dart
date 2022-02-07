@@ -75,9 +75,12 @@ class HomePage extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: elevation.state,
-        title: Text(
-          'ホーム',
-          style: textTheme.headline6,
+        title: Hero(
+          tag: 'logo',
+          child: Image.asset(
+            'images/github_icon.png',
+            height: 50,
+          ),
         ),
       ),
       body: SafeArea(

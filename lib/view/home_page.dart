@@ -76,20 +76,7 @@ class HomePage extends HookConsumerWidget {
               ),
               if (isSearched.state) ...[
                 repositories.when(
-                  loading: () => SliverFillRemaining(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'images/github_icon.png',
-                            height: 100,
-                          ),
-                          Text('loading...', style: textTheme.bodyText2),
-                        ],
-                      ),
-                    ),
-                  ),
+                  loading: () => _buildLoadingView(textTheme),
                   error: (error, stack) {
                     print(error);
                     return SliverToBoxAdapter(
@@ -162,6 +149,23 @@ class HomePage extends HookConsumerWidget {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  SliverFillRemaining _buildLoadingView(TextTheme textTheme) {
+    return SliverFillRemaining(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'images/github_icon.png',
+              height: 100,
+            ),
+            Text('loading...', style: textTheme.bodyText2),
+          ],
         ),
       ),
     );

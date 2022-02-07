@@ -92,6 +92,8 @@ class HomePage extends HookConsumerWidget {
       ),
       body: SafeArea(
         bottom: false,
+        right: false,
+        left: false,
         child: GestureDetector(
           onTap: focusNode.unfocus,
           child: CustomScrollView(
